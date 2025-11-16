@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediDoor Foundation – Donate Medicines</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0; padding: 0;
+        background: #f4f7fb;
+    }
+    .page { display: none; padding: 20px; max-width: 400px; margin: 0 auto; }
+    .active { display: block; }
+    .btn {
+        background: #0077ff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        margin-top: 15px;
+        transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background: #005bb5;
+    }
+    .amount-box {
+        padding: 15px;
+        background: white;
+        margin: 10px 0;
+        border-radius: 10px;
+        border: 2px solid #ccc; /* Default border */
+        cursor: pointer;
+        font-size: 18px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .amount-box:hover {
+        border-color: #00aaff;
+    }
+    .amount-box.selected {
+        border: 2px solid #0077ff;
+        box-shadow: 0 0 8px rgba(0, 119, 255, 0.3);
+    }
+    .impact {
+        margin-top: -5px; /* Pull impact message up */
+        margin-bottom: 15px;
+        padding: 10px;
+        background: #e8f1ff;
+        border-left: 5px solid #0077ff;
+        border-radius: 0 0 10px 10px;
+        font-size: 14px;
+        color: #333;
+        display: none;
+    }
+    input {
+        padding: 12px;
+        width: calc(100% - 24px);
+        margin-top: 12px;
+        border-radius: 8px;
+        border: 1px solid #999;
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+    .success-box {
+        margin-top: 40px;
+        background: #d2ffd9;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        border: 2px solid #00cc33;
+    }
+    h2 { color: #0077ff; }
+    h3 { color: #333; margin-top: 25px; }
+</style>
+
+<script>
+let selectedAmount = 0; // Global variable to store the selected or entered amount
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function selectAmount(amount, element) {
+    selectedAmount = amount;
+    
+    // Deselect all amount boxes
+    document.querySelectorAll('.amount-box').forEach(box => box.classList.remove('selected'));
+    
+    // Select the clicked box
+    element.classList.add('selected');
+
+    // Clear and hide other amount input
+    document.getElementById("otherAmountInput").value = "";
+
+    // Show/Hide impact messages
+    document.querySelectorAll('.impact').forEach(i => i.style.display = "none");
+    if (amount === 500) document.getElementById("impact500").style.display = "block";
+    if (amount === 1000) document.getElementById("impact1000").style.display = "block";
+    if (amount === 1500) document.getElementById("impact1500").style.display = "block";
+}
+
+function handleOtherAmountChange() {
+    // Clear selections and hide impact messages when typing in 'other'
+    document.querySelectorAll('.amount-box').forEach(box => box.classList.remove('selected'));
+    document.querySelectorAll('.impact').forEach(i => i.style.display = "none");
+    
+    const input = document.getElementById("otherAmountInput");
+    const amount = parseInt(input.value);
+    
+    if (isNaN(amount) || amount < 499) {
+        selectedAmount = 0;
+    } else {
+        selectedAmount = amount;
+    }
+}
+
+function goToDetails() {
+    // Check for selected amount
+    let finalAmount = selectedAmount;
+    
+    if (finalAmount === 0) {
+        // If not pre-selected, check the 'other amount' input field
+        const otherAmount = parseInt(document.getElementById("otherAmountInput").value);
+        if (!isNaN(otherAmount) && otherAmount >= 499) {
+            finalAmount = otherAmount;
+        }
+    }
+    
+    if (finalAmount < 499) {
+        alert("Please select a donation amount or enter a minimum of ₹499.");
+        return;
+    }
+    
+    // Store the final amount in a hidden field on the QR page for reference
+    document.getElementById("paymentAmountDisplay").textContent = `Donation Amount: ₹${finalAmount}`;
+    
+    showPage('detailsPage');
+}
+
+function goToQR() {
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
+    
+    if (name === "" || phone === "" || email === "") {
+        alert("Please fill in your Full Name, Phone Number, and Email ID.");
+        return;
+    }
+    
+    // Pre-fill UPI link with the amount for better user experience
+    const upiLink = `upi://pay?pa=ujjwal9971@ybl&pn=UJJWAL&cu=INR&am=${selectedAmount}`;
+    document.getElementById("upiPayLink").href = upiLink;
+    
+    showPage('qrPage');
+}
+
+function goToSuccess() {
+    showPage('successPage');
+}
+
+// Initialize: ensure page 1 is shown on load and amount is set to 0
+document.addEventListener('DOMContentLoaded', () => {
+    showPage('homePage');
+    document.getElementById("otherAmountInput").addEventListener('input', handleOtherAmountChange);
+});
+</script>
+
+</head>
+<body>
+
+<div id="homePage" class="page active">
+    <h2>MediDoor Foundation – Donate for Medicines</h2>
+    <p>Support essential medicines for poor and underprivileged children.</p>
+
+    <h3>Select Donation Amount</h3>
+
+    <div class="amount-box" onclick="selectAmount(500, this)">
+        ₹500 – Basic Medical Support
+    </div>
+    <div id="impact500" class="impact">
+        ₹500 provides ORS, fever medicines, zinc syrup & basic treatment for one sick child.
+    </div>
+
+    <div class="amount-box" onclick="selectAmount(1000, this)">
+        ₹1000 – Extended Medical Care
+    </div>
+    <div id="impact1000" class="impact">
+        ₹1000 supports 2–3 children with antibiotics, cough syrups & necessary clinical care.
+    </div>
+
+    <div class="amount-box" onclick="selectAmount(1500, this)">
+        ₹1500 – Full Month Treatment
+    </div>
+    <div id="impact1500" class="impact">
+        ₹1500 provides full monthly essential medicines to a malnourished child.
+    </div>
+
+    <h3>Other Amount</h3>
+    <input type="number" id="otherAmountInput" placeholder="Enter amount (min ₹499)" min="499">
+
+    <button class="btn" onclick="goToDetails()">Donate Now</button>
+</div>
+
+
+<div id="detailsPage" class="page">
+    <h2>Your Details</h2>
+
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="text" id="address" placeholder="Full Address">
+    <input type="tel" id="phone" placeholder="Phone Number" required>
+    <input type="email" id="email" placeholder="Email ID" required>
+
+    <button class="btn" onclick="goToQR()">Proceed to Payment</button>
+</div>
+
+
+<div id="qrPage" class="page">
+    <h2>Complete Your Donation</h2>
+    <p id="paymentAmountDisplay" style="font-weight: bold; color: #cc0000;">Donation Amount: ₹0</p>
+    <p>Scan this QR using any UPI app.</p>
+
+    <img src="your-qr-image.png" alt="UPI Payment QR Code" width="260" style="border-radius:10px; display: block; margin: 15px auto;">
+
+    <p style="margin-top:15px; font-size:18px;">OR</p>
+
+    <p>
+        <a id="upiPayLink"
+           href="upi://pay?pa=ujjwal9971@ybl&pn=UJJWAL&cu=INR"
+           style="font-size:20px; color:#0077ff; text-decoration:none; font-weight: bold;">
+           👉 Tap to Pay via UPI Apps
+        </a>
+    </p>
+
+    <button class="btn" onclick="goToSuccess()">I Have Paid</button>
+</div>
+
+
+<div id="successPage" class="page">
+    <div class="success-box">
+        <h2>Thank You ❤️</h2>
+        <p>Your support will help us provide life-saving medicines to underprivileged children.</p>
+        <p>MediDoor Foundation truly appreciates your kindness.</p>
+    </div>
+</div>
+
+</body>
+</html>
