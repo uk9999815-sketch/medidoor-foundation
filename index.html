@@ -37,34 +37,33 @@
     .btn:hover { background:#005bb5; }
 
     .amount-box {
-        padding: 15px;
+        padding: 18px;
         background: #111;
-        margin: 10px 0;
-        border-radius: 10px;
+        margin: 14px 0;
+        border-radius: 12px;
         border: 2px solid #555;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 22px;
+        text-align: center;
         transition: .3s;
-        color: white;
     }
     .amount-box:hover { border-color:#00aaff; }
 
     .amount-box.selected {
-        border: 2px solid #0077ff;
+        border-color: #0077ff;
         background: #0d1a2a;
         box-shadow: 0 0 10px rgba(0,119,255,.5);
     }
 
     .impact {
-        margin-top: -5px;
-        margin-bottom: 15px;
-        padding: 10px;
-        background: #1a1a1a;
-        border-left: 5px solid #0077ff;
-        border-radius: 0 0 10px 10px;
-        font-size: 14px;
-        color: #ccc;
-        display: none;
+        display:none;
+        margin-top:8px;
+        background:#1a1a1a;
+        border-left:4px solid #0077ff;
+        padding:10px;
+        border-radius:8px;
+        font-size:14px;
+        color:#ddd;
     }
 
     input {
@@ -163,30 +162,34 @@ document.addEventListener('DOMContentLoaded', ()=>{
 <!-- HOME PAGE -->
 <div id="homePage" class="page active">
 
-    <!-- HERO IMAGE -->
-    <img src="https://i.ibb.co/35vfp8N7/IMG-20251117-WA0002.jpg" class="header-img">
+    <!-- TOP IMAGE (3rd image) -->
+    <img src="https://i.ibb.co/6RTgfhdf/IMG-20251117-WA0001.jpg"
+         class="header-img"
+         style="margin-bottom:25px;">
 
-    <h2>MediDoor Foundation – Donate for Medicines</h2>
-    <p>Your support can help a child receive life-saving treatment.</p>
+    <!-- PORTRAIT SMALL IMAGE (1st image) -->
+    <img src="https://i.ibb.co/35vfp8N7/IMG-20251117-WA0002.jpg"
+         style="
+            width:65%;
+            display:block;
+            margin:0 auto;
+            margin-top:15px;
+            border-radius:14px;
+            box-shadow:0 0 12px rgba(255,255,255,0.1);
+         ">
 
-    <!-- EMOTIONAL IMAGE 1 -->
-    <img src="https://i.ibb.co/0R6FmbqY/IMG-20251117-WA0000.jpg" class="header-img">
+    <h2>Select Donation Amount</h2>
 
-    <!-- EMOTIONAL IMAGE 2 -->
-    <img src="https://i.ibb.co/6RTgfhdf/IMG-20251117-WA0001.jpg" class="header-img">
+    <div class="amount-box" onclick="selectAmount(500, this)">₹500</div>
+    <div id="impact500" class="impact">Helps provide basic medicines like ORS, zinc, fever medicines.</div>
 
-    <h3>Select Donation Amount</h3>
+    <div class="amount-box" onclick="selectAmount(1000, this)">₹1000</div>
+    <div id="impact1000" class="impact">Supports extended medical care including antibiotics.</div>
 
-    <div class="amount-box" onclick="selectAmount(500, this)">₹500 – Basic Medical Support</div>
-    <div id="impact500" class="impact">₹500 provides ORS, fever medicines & zinc syrup.</div>
+    <div class="amount-box" onclick="selectAmount(1500, this)">₹1500</div>
+    <div id="impact1500" class="impact">Covers medicines for a child for almost a month.</div>
 
-    <div class="amount-box" onclick="selectAmount(1000, this)">₹1000 – Extended Medical Care</div>
-    <div id="impact1000" class="impact">₹1000 supports 2–3 children with antibiotics.</div>
-
-    <div class="amount-box" onclick="selectAmount(1500, this)">₹1500 – Full Month Treatment</div>
-    <div id="impact1500" class="impact">₹1500 provides medicines for 1 month.</div>
-
-    <h3>Other Amount</h3>
+    <h2>Other Amount</h2>
     <input type="number" id="otherAmountInput" placeholder="Enter amount (min ₹499)" min="499">
 
     <button class="btn" onclick="goToDetails()">Donate Now</button>
@@ -195,21 +198,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
 <!-- DETAILS PAGE -->
 <div id="detailsPage" class="page">
 
-    <img src="https://i.ibb.co/0R6FmbqY/IMG-20251117-WA0000.jpg" class="header-img">
+    <!-- 🔥 2nd Image Added Here (as you asked) -->
+    <img src="https://i.ibb.co/0R6FmbqY/IMG-20251117-WA0000.jpg"
+         class="header-img"
+         style="margin-bottom:20px;">
 
     <h2>Your Details</h2>
+
     <input type="text" id="name" placeholder="Full Name" required>
-    <input type="text" id="address" placeholder="Full Address">
     <input type="tel" id="phone" placeholder="Phone Number" required>
     <input type="email" id="email" placeholder="Email ID" required>
+    <input type="text" id="address" placeholder="Full Address">
 
     <button class="btn" onclick="goToQR()">Proceed to Payment</button>
 </div>
 
 <!-- QR PAGE -->
 <div id="qrPage" class="page">
-
-    <img src="https://i.ibb.co/6RTgfhdf/IMG-20251117-WA0001.jpg" class="header-img">
 
     <h2>Complete Your Donation</h2>
     <p id="paymentAmountDisplay" style="font-weight: bold; color: #00eaff;">Donation Amount: ₹0</p>
@@ -239,4 +244,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </body>
 </html>
 
-   
+  
+      
+      
+  
+
+
